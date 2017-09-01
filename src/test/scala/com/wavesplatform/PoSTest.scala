@@ -61,15 +61,17 @@ object PoSTest {
     val zz = state.accounts.keys.flatMap { account =>
       PoSCalc.nextBlockGenerationTime(state.height, state, FunctionalitySettings.MAINNET, previousBlock, account)
         .toOption
-        .map(account -> _)
+        .map(ts => account -> math.ceil(ts / 1e3).toLong * 1000)
     }
 
-    val (nextGenerator, nextTs) = zz.minBy(_._2)
+    val (_, nextTs) = zz.minBy(_._2)
+    val possibleGenerators = zz.filter(_._2 == nextTs)
+    val nextGenerator = Random.shuffle(possibleGenerators).head._1
 
     val btg = calcBaseTarget(GenesisSettings.MAINNET.averageBlockDelay, state.height, previousBlock, state.greatGrandParent, nextTs)
     val gs = calcGeneratorSignature(previousBlock.consensusData, nextGenerator)
     val consensusData = NxtLikeConsensusBlockData(btg, gs)
-    val newBlock = Block.buildAndSign(2, nextTs + 1000, previousBlock.uniqueId, consensusData, Seq.empty, nextGenerator)
+    val newBlock = Block.buildAndSign(2, nextTs, previousBlock.uniqueId, consensusData, Seq.empty, nextGenerator)
     val newState = state.appendBlock(newBlock)
 
     newState -> newBlock

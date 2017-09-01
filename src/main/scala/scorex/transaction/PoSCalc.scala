@@ -50,7 +50,7 @@ object PoSCalc extends ScorexLogging {
           (avgDelayInSeconds - Math.max(blocktimeAverage, minBlocktimeLimit)) / (avgDelayInSeconds * 100)
       }).toLong
 
-      scala.math.min(baseTarget, maxBaseTarget)
+      baseTarget.min(maxBaseTarget).max(1L)
     } else {
       prevBaseTarget
     }
