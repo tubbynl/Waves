@@ -66,17 +66,25 @@ object PoSCalc extends ScorexLogging {
       state: StateReader,
       fs: FunctionalitySettings,
       block: Block,
+      account: PublicKeyAccount): Either[String, Long] =
+    nextBlockGenerationTime(height, state, fs, block.consensusData, block.timestamp, account)
+
+  def nextBlockGenerationTime(
+      height: Int,
+      state: StateReader,
+      fs: FunctionalitySettings,
+      cData: NxtLikeConsensusBlockData,
+      blockTimestamp: Long,
       account: PublicKeyAccount): Either[String, Long] = {
     val balance = generatingBalance(state, fs, account, height)
     Either.cond(balance >= MinimalEffectiveBalanceForGenerator,
       balance,
       s"Balance $balance of ${account.address} is lower than $MinimalEffectiveBalanceForGenerator")
       .flatMap { _ =>
-        val cData = block.consensusData
         val hit = calcHit(cData, account)
         val t = cData.baseTarget
 
-        val calculatedTs = (hit * 1000) / (BigInt(t) * balance) + block.timestamp
+        val calculatedTs = (hit * 1000) / (BigInt(t) * balance) + blockTimestamp
         if (0 < calculatedTs && calculatedTs < Long.MaxValue) {
           Right(calculatedTs.toLong)
         } else {
