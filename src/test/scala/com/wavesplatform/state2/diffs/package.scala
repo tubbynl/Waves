@@ -13,7 +13,7 @@ package object diffs {
 
   private val lock = new ReentrantReadWriteLock()
 
-  def newState(): StateWriterImpl = new StateWriterImpl(StateStorage(None, dropExisting = false).get, lock)
+  def newState(): StateWriterImpl = new StateWriterImpl(???)
 
   def newHistory(): History = HistoryWriterImpl(None, lock, TestFunctionalitySettings.Enabled, TestFunctionalitySettings.EmptyFeaturesSettings).get
 
@@ -26,7 +26,7 @@ package object diffs {
 
     preconditions.foreach { precondition =>
       val preconditionDiff = differ(state, precondition).explicitGet()
-      state.applyBlockDiff(preconditionDiff)
+      state.applyBlockDiff(preconditionDiff, ???, 0)
     }
     val totalDiff1 = differ(state, block)
     assertion(totalDiff1)
@@ -46,11 +46,11 @@ package object diffs {
 
     zipWithPrev(preconditions).foreach { wp =>
       val preconditionDiff = differ(state, wp).explicitGet()
-      state.applyBlockDiff(preconditionDiff)
+      state.applyBlockDiff(preconditionDiff, ???, ???)
     }
 
     val totalDiff1 = differ(state, (preconditions.lastOption, block)).explicitGet()
-    state.applyBlockDiff(totalDiff1)
+    state.applyBlockDiff(totalDiff1, ???, ???)
     assertion(totalDiff1, state)
 
     val preconditionDiff = BlockDiffer.unsafeDiffMany(fs, newState(), None)(preconditions)
@@ -67,10 +67,10 @@ package object diffs {
     val state = newState()
     preconditions.foreach { precondition =>
       val preconditionDiff = differ(state, precondition).explicitGet()
-      state.applyBlockDiff(preconditionDiff)
+      state.applyBlockDiff(preconditionDiff, ???, 0)
     }
     val totalDiff1 = differ(state, block).explicitGet()
-    state.applyBlockDiff(totalDiff1)
+    state.applyBlockDiff(totalDiff1, ???, 0)
     assertion(totalDiff1, state)
 
     val preconditionDiff = BlockDiffer.unsafeDiffMany(fs, newState(), None)(preconditions)

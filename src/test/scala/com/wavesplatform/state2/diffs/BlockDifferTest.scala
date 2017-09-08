@@ -53,12 +53,12 @@ class BlockDifferTest extends FreeSpecLike with Matchers with BlockGen {
 
         assertDiff(testChain.init, fs) { case (diff, s) =>
           diff.snapshots(signerA)(9).balance shouldBe 40
-          s.balance(signerA) shouldBe 40
+          s.wavesBalance(signerA).balance shouldBe 40
         }
 
         assertDiff(testChain, fs) { case (diff, s) =>
           diff.snapshots(signerB)(10).balance shouldBe 50
-          s.balance(signerB) shouldBe 50
+          s.wavesBalance(signerB).balance shouldBe 50
         }
       }
 
@@ -84,7 +84,7 @@ class BlockDifferTest extends FreeSpecLike with Matchers with BlockGen {
 
         assertDiff(testChain, fs) { case (diff, s) =>
           diff.snapshots(signerB)(10).balance shouldBe 44
-          s.balance(signerB) shouldBe 44
+          s.wavesBalance(signerB).balance shouldBe 44
         }
       }
 
@@ -110,12 +110,12 @@ class BlockDifferTest extends FreeSpecLike with Matchers with BlockGen {
 
         assertDiff(testChain.init, fs) { case (diff, s) =>
           diff.snapshots(signerA)(9).balance shouldBe 34
-          s.balance(signerA) shouldBe 34
+          s.wavesBalance(signerA).balance shouldBe 34
         }
 
         assertDiff(testChain, fs) { case (diff, s) =>
           diff.snapshots(signerB)(10).balance shouldBe 50
-          s.balance(signerB) shouldBe 50
+          s.wavesBalance(signerB).balance shouldBe 50
         }
       }
     }
