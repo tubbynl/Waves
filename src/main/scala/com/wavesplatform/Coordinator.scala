@@ -3,7 +3,7 @@ package com.wavesplatform
 import java.util.concurrent.atomic.AtomicBoolean
 
 import com.wavesplatform.features.{BlockchainFeatures, FeatureProvider}
-import com.wavesplatform.metrics.{BlockStats, Metrics, TxsInBlockchainStats}
+import com.wavesplatform.metrics.{BlockStats, Metrics}
 import com.wavesplatform.mining.Miner
 import com.wavesplatform.network.{BlockCheckpoint, Checkpoint}
 import com.wavesplatform.settings.{BlockchainSettings, WavesSettings}
@@ -115,7 +115,6 @@ object Coordinator extends ScorexLogging with Instrumented {
     discardedTxs <- blockchainUpdater.processBlock(block)
   } yield {
     if (local) BlockStats.mined(block, height) else BlockStats.applied(block, height)
-    TxsInBlockchainStats.record(block.transactionData.size - discardedTxs.size)
 
     utxStorage.removeAll(block.transactionData)
     discardedTxs.foreach(utxStorage.putIfNew)
