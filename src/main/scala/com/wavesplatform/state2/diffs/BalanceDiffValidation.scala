@@ -3,7 +3,7 @@ package com.wavesplatform.state2.diffs
 import cats.implicits._
 import com.wavesplatform.settings.FunctionalitySettings
 import com.wavesplatform.state2.reader.StateReader
-import com.wavesplatform.state2.{ByteStr, Diff, Instrumented, LeaseInfo, Portfolio}
+import com.wavesplatform.state2.{Diff, Instrumented, LeaseInfo, Portfolio}
 import scorex.account.Address
 import scorex.transaction.Transaction
 import scorex.transaction.ValidationError.AccountBalanceError
@@ -42,5 +42,5 @@ object BalanceDiffValidation extends ScorexLogging with Instrumented {
     }
   }
 
-  private def leaseWavesInfo(p: Portfolio): (Long, LeaseInfo) = (p.balance, p.leaseInfo)
+//  private def leaseWavesInfo(p: Portfolio): (Long, LeaseInfo) = (p.balance, p.leaseInfo)
 }
