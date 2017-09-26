@@ -16,6 +16,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.{NioServerSocketChannel, NioSocketChannel}
 import io.netty.handler.codec.{LengthFieldBasedFrameDecoder, LengthFieldPrepender}
+import io.netty.handler.logging.LoggingHandler
 import scorex.transaction._
 import scorex.utils.{ScorexLogging, Time}
 
@@ -102,6 +103,7 @@ class NetworkServer(checkpointService: CheckpointService,
       .channel(classOf[NioServerSocketChannel])
       .childHandler(new PipelineInitializer[SocketChannel](Seq(
         inboundConnectionFilter,
+        new LoggingHandler(),
         writeErrorHandler,
         new HandshakeDecoder,
         new HandshakeTimeoutHandler(settings.networkSettings.handshakeTimeout),
@@ -142,6 +144,7 @@ class NetworkServer(checkpointService: CheckpointService,
     .channel(classOf[NioSocketChannel])
     .handler(new PipelineInitializer[SocketChannel](Seq(
       writeErrorHandler,
+      //new LoggingHandler(),
       new HandshakeDecoder,
       new HandshakeTimeoutHandler(settings.networkSettings.handshakeTimeout),
       clientHandshakeHandler,

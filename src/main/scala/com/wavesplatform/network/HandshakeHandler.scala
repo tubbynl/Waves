@@ -15,8 +15,19 @@ import scorex.utils.ScorexLogging
 import scala.concurrent.duration.FiniteDuration
 
 class HandshakeDecoder extends ReplayingDecoder[Void] with ScorexLogging {
-  override def decode(ctx: ChannelHandlerContext, in: ByteBuf, out: util.List[AnyRef]) =
-    out.add(Handshake.decode(in))
+  override def decode(ctx: ChannelHandlerContext, in: ByteBuf, out: util.List[AnyRef]) = {
+    try {
+      log.trace(s"${id(ctx)} ==> ctx.isRemoved = ${ctx.isRemoved}")
+      out.add(Handshake.decode2(ctx, in))
+    } catch {
+      case e: IndexOutOfBoundsException =>
+        throw e
+
+      case e: Throwable =>
+        log.error("Can't decode handshake", e)
+        ctx.close()
+    }
+  }
 }
 
 case object HandshakeTimeoutExpired
