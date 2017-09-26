@@ -21,7 +21,10 @@ class DynamicWideTransactionGenerator(settings: Settings,
         settings.maxTxsPerRequest.foldLeft(newValue)(Math.min(_, _))
       }
       .toInt
-    Gen.txs(settings.minFee, settings.maxFee, accounts).take(currTxsNumber)
+
+    val limitedRecipientGen = Gen.address(settings.limitDestAccounts)
+
+    Gen.txs(settings.minFee, settings.maxFee, accounts, limitedRecipientGen).take(currTxsNumber)
   }
 
 }
