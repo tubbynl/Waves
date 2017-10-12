@@ -1,6 +1,7 @@
 package scorex.utils
 
 import java.net.InetAddress
+import java.time.Duration
 
 import org.apache.commons.net.ntp.NTPUDPClient
 
@@ -33,7 +34,7 @@ class TimeImpl extends Time with ScorexLogging {
     }
 
     //CALCULATE CORRECTED TIME
-    System.currentTimeMillis() + offset
+    System.currentTimeMillis() + offset + NTP.NodeTimeDrift
   }
 
 
@@ -62,4 +63,6 @@ class TimeImpl extends Time with ScorexLogging {
   }
 }
 
-object NTP extends TimeImpl
+object NTP extends TimeImpl {
+  val NodeTimeDrift: Long = Duration.ofSeconds(2).toMillis
+}

@@ -12,7 +12,7 @@ import scorex.block.Block
 import scorex.consensus.TransactionsOrdering
 import scorex.transaction.ValidationError.GenericError
 import scorex.transaction._
-import scorex.utils.{ScorexLogging, Time}
+import scorex.utils.{NTP, ScorexLogging, Time}
 
 object Coordinator extends ScorexLogging {
   def processFork(checkpoint: CheckpointService, history: History, blockchainUpdater: BlockchainUpdater, stateReader: StateReader,
@@ -111,7 +111,7 @@ object Coordinator extends ScorexLogging {
     }
   }
 
-  val MaxTimeDrift: Long = Duration.ofSeconds(15).toMillis
+  val MaxTimeDrift: Long = Duration.ofSeconds(15).toMillis - NTP.NodeTimeDrift
 
   private def blockConsensusValidation(history: History, state: StateReader, bcs: BlockchainSettings, currentTs: Long)
                                       (block: Block): Either[ValidationError, Unit] = {
